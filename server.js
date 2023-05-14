@@ -1,32 +1,34 @@
-import express from "express";
-import expressLayouts from "express-ejs-layouts";
-import mongoose from "mongoose";
-import bodyParser from "body-parser";
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+import express from 'express';
+import expressLayouts from 'express-ejs-layouts';
+import bodyParser from 'body-parser';
+import * as url from 'url';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const app = express();
 dotenv.config();
 
+import indexRouter from './routes/index.js';
+import authorRouter from './routes/authors.js';
+import bookRouter from './routes/books.js';
 
-const app = express();
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
-
-const db = mongoose.connection;
-db.on("error", error => console.error(error));
-db.once("open", () => console.log("Connected to Mongoose."));
-
-
-app.set("view engine", "ejs");
-app.set("views", "./views");
-app.set("layout", "layouts/layout");
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.set('layout', 'layouts/layout');
 app.use(expressLayouts);
-app.use(express.static("public"))
-app.use(bodyParser.urlencoded({limit: "10mb", extended: false}));
-
-import indexRoute from "./routes/index.js"
-import authorRoute from "./routes/authors.js"
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
 
 
-app.use('/', indexRoute);
-app.use('/authors', authorRoute);
+import mongoose from 'mongoose';
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', error => console.error(error));
+db.once('open', () => console.log('Connected to Mongoose'));
 
 
-app.listen(3000, () => {console.log("Server listening on port 3000.")});
+app.use('/', indexRouter);
+app.use('/authors', authorRouter);
+app.use('/books', bookRouter);
+
+app.listen(process.env.PORT || 3000);
