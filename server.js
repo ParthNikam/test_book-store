@@ -1,34 +1,30 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import expressLayouts from 'express-ejs-layouts';
-import bodyParser from 'body-parser';
-import * as url from 'url';
+require('dotenv').config()
+const express = require('express')
+const app = express()
+const expressLayouts = require('express-ejs-layouts')
+const bodyParser = require('body-parser')
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-const app = express();
-dotenv.config();
+const indexRouter = require('./routes/index')
+const authorRouter = require('./routes/authors')
+const bookRouter = require('./routes/books')
 
-import indexRouter from './routes/index.js';
-import authorRouter from './routes/authors.js';
-import bookRouter from './routes/books.js';
-
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
-app.set('layout', 'layouts/layout');
-app.use(expressLayouts);
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
+app.set('view engine', 'ejs')
+app.set('views', __dirname + '/views')
+app.set('layout', 'layouts/layout')
+app.use(expressLayouts)
+app.use(express.static('public'))
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 
 
-import mongoose from 'mongoose';
-mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true});
-const db = mongoose.connection;
-db.on('error', error => console.error(error));
+const mongoose = require('mongoose')
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+const db = mongoose.connection
+db.on('error', error => console.error(error))
 
 
+app.use('/', indexRouter)
+app.use('/authors', authorRouter)
+app.use('/books', bookRouter)
 
-app.use('/', indexRouter);
-app.use('/authors', authorRouter);
-app.use('/books', bookRouter);
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000)
