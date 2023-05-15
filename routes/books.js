@@ -1,10 +1,8 @@
-import Router from 'express';
-import Book from '../models/book.js';
-import Author from '../models/author.js';
-
-
-const router = Router();
-
+const express = require('express')
+const router = express.Router()
+const Book = require('../models/book')
+const Author = require('../models/author')
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 
 
 // All Books Route
@@ -19,7 +17,6 @@ router.get('/', async (req, res) => {
   if (req.query.publishedAfter != null && req.query.publishedAfter != '') {
     query = query.gte('publishDate', req.query.publishedAfter)
   }
-
   try {
     const books = await query.exec()
     res.render('books/index', {
@@ -31,12 +28,10 @@ router.get('/', async (req, res) => {
   }
 })
 
-
 // New Book Route
 router.get('/new', async (req, res) => {
   renderNewPage(res, new Book())
 })
-
 
 // Create Book Route
 router.post('/', async (req, res) => {
@@ -46,9 +41,8 @@ router.post('/', async (req, res) => {
     publishDate: new Date(req.body.publishDate),
     pageCount: req.body.pageCount,
     description: req.body.description
-  });
-
-  saveCover(book, req.body.cover);
+  })
+  saveCover(book, req.body.cover)
 
   try {
     const newBook = await book.save()
@@ -58,18 +52,6 @@ router.post('/', async (req, res) => {
     renderNewPage(res, book, true)
   }
 })
-
-
-function saveCover(book, coverEncoded) {
-  if (coverEncoded == null) return ;
-  const cover = JSON.parse(coverEncoded);
-  if (cover != null && imageMimeTypes.includes(cover.type)) {
-    book.coverImage = new Buffer.from(cover.data, "base64");
-    book.coverImageType = cover.type;
-  }
-} 
-
-
 
 async function renderNewPage(res, book, hasError = false) {
   try {
@@ -85,5 +67,13 @@ async function renderNewPage(res, book, hasError = false) {
   }
 }
 
+function saveCover(book, coverEncoded) {
+  if (coverEncoded == null) return
+  const cover = JSON.parse(coverEncoded)
+  if (cover != null && imageMimeTypes.includes(cover.type)) {
+    book.coverImage = new Buffer.from(cover.data, 'base64')
+    book.coverImageType = cover.type
+  }
+}
 
-export default router;
+module.exports = router

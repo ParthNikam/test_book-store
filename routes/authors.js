@@ -1,9 +1,7 @@
-import Router from 'express';
-import Author from '../models/author.js';
+const express = require('express')
+const router = express.Router()
+const Author = require('../models/author')
 
-
-
-const router = Router();
 // All Authors Route
 router.get('/', async (req, res) => {
   let searchOptions = {}
@@ -21,12 +19,10 @@ router.get('/', async (req, res) => {
   }
 })
 
-
 // New Author Route
 router.get('/new', (req, res) => {
   res.render('authors/new', { author: new Author() })
 })
-
 
 // Create Author Route
 router.post('/', async (req, res) => {
@@ -45,5 +41,4 @@ router.post('/', async (req, res) => {
   }
 })
 
-
-export default router;
+module.exports = router
