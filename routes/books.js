@@ -45,9 +45,9 @@ router.post('/', async (req, res) => {
     pageCount: req.body.pageCount,
     description: req.body.description
   })
-  saveCover(book, req.body.cover)
 
   try {
+    saveCover(book, req.body.cover)
     const newBook = await book.save()
     res.redirect(`books/${newBook.id}`)
   } catch {
@@ -147,7 +147,6 @@ async function renderFormPage(res, book, form, hasError = false) {
     res.redirect('/books')
   }
 }
-
 
 
 function saveCover(book, coverEncoded) {
