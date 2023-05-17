@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const bookSchema = new mongoose.Schema({
   title: {
@@ -42,4 +42,4 @@ bookSchema.virtual('coverImagePath').get(function() {
   }
 })
 
-module.exports = mongoose.model('Book', bookSchema)
+export default mongoose.model('Book', bookSchema)

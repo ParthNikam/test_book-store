@@ -1,9 +1,11 @@
-const express = require('express')
-const router = express.Router()
-const Book = require('../models/book')
-const Author = require('../models/author')
+import { Router } from 'express'
+import Book from '../models/book.js'
+import Author from '../models/author.js'
+
+
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 
+const router = Router()
 
 // All Books Route
 router.get('/', async (req, res) => {
@@ -158,4 +160,4 @@ function saveCover(book, coverEncoded) {
   }
 }
 
-module.exports = router
+export default router

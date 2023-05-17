@@ -1,8 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const Author = require('../models/author')
-const Book = require('../models/book')
+import { Router } from 'express'
+import Author from '../models/author.js'
+import Book from '../models/book.js'
 
+
+const router = Router();
 // All Authors Route
 router.get('/', async (req, res) => {
   let searchOptions = {}
@@ -110,5 +111,4 @@ router.delete("/:id", async (req, res) => {
 
 
 
-
-module.exports = router
+export default router

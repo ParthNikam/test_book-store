@@ -1,12 +1,23 @@
-const express = require('express')
-const app = express()
-const expressLayouts = require('express-ejs-layouts')
-const bodyParser = require('body-parser')
-const methodOverride = require('method-override')
+import express from 'express'
+import expressLayouts from 'express-ejs-layouts'
+import bodyParser from 'body-parser'
+import methodOverride from 'method-override'
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const indexRouter = require('./routes/index')
-const authorRouter = require('./routes/authors')
-const bookRouter = require('./routes/books')
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+dotenv.config()
+
+
+import indexRouter from './routes/index.js'
+import authorRouter from './routes/authors.js'
+import bookRouter from './routes/books.js'
+
+
+const app = express()
 
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
@@ -16,9 +27,8 @@ app.use(methodOverride('_method'))
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 
-const DATABASE_URL="mongodb://127.0.0.1/zliber"
-const mongoose = require('mongoose')
-mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+// const DATABASE_URL="mongodb://127.0.0.1/zliber"
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
 

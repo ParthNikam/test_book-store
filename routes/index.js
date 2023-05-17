@@ -1,6 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const Book = require('../models/book')
+import { Router } from 'express'
+import Book from '../models/book.js'
+
+const router = Router()
 
 router.get('/', async (req, res) => {
   let books
@@ -12,4 +13,4 @@ router.get('/', async (req, res) => {
   res.render('index', { books: books })
 })
 
-module.exports = router
+export default router
